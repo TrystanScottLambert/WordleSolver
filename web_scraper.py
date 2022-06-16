@@ -1,9 +1,10 @@
 """Module to scrap the wordle site."""
 
-import webbrowser
 import time
 import pyautogui
 import numpy as np
+import os
+from voice import greet
 
 WORDLE_SITE = 'https://www.nytimes.com/games/wordle/index.html'
 close_click = (1215, 372)
@@ -22,18 +23,17 @@ colors = {
 
 def set_up():
     """Open the browser and play the first move."""
-    webbrowser.open(WORDLE_SITE, new=2) # open the browser to the wordle game site
-    time.sleep(2)
-
+    os.system(f'google-chrome --args --incognito "{WORDLE_SITE}"')
     pyautogui.moveTo(close_click[0], close_click[1], duration=0.3)
     pyautogui.click()
+    greet()
     time.sleep(0.5)
     make_first_move()
 
 def make_move(word):
     """Enter a given word."""
     pyautogui.typewrite(word + '\n', interval = 0.25)
-    time.sleep(3)
+    time.sleep(1)
 
 def make_first_move():
     """Play 'crate' the very first move."""
@@ -41,13 +41,13 @@ def make_first_move():
 
 def get_y_pixel():
     """Get the y pixel value of the last move."""
-    time.sleep(3)
+    time.sleep(1)
     red_color = 255
     x_pixel = x_pixels[0]
     for i, y_pixel in enumerate(y_pixels):
         pix = pyautogui.pixel(x_pixel, y_pixel)
         #pyautogui.moveTo(x_pixel, y_pixel, duration = 0.3)
-        #print(pix)
+        print(pix)
         red_color = pix.red
         if red_color == 255:
             return y_pixels[i-1]
@@ -72,4 +72,4 @@ def get_latest_results():
 
 if __name__ == '__main__':
     set_up()
-    get_latest_results()
+    print(get_latest_results())

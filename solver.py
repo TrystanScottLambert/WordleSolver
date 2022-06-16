@@ -2,8 +2,6 @@
 import string
 import numpy as np
 
-
-
 def generate_all_words():
     """Get the all the 5 letter words of the english language."""
 
@@ -66,12 +64,6 @@ class CurrentGuess():
     def update_permutations(self):
         """Update each possible letter for each position."""
         for i, feedback in enumerate(self.result):
-            if feedback == 0:
-                for j in range(1,6):
-                    try:
-                        CurrentGuess.permutations[j].remove(self.word[i])
-                    except ValueError:
-                        pass
 
             if feedback == 1:
                 try:
@@ -83,6 +75,18 @@ class CurrentGuess():
             if feedback == 2:
                 CurrentGuess.must_use_letters.append(self.word[i])
                 CurrentGuess.permutations[i+1] = [self.word[i]]
+
+            if feedback == 0:
+                try:
+                    CurrentGuess.permutations[i+1].remove(self.word[i])
+                except ValueError:
+                    pass
+                for j in range(1,6):
+                    if (j != i+1) and (self.word[i] not in self.must_use_letters):
+                        try:
+                            CurrentGuess.permutations[j].remove(self.word[i])
+                        except ValueError:
+                            pass
 
 
     def find_must_use(self):
@@ -110,7 +114,7 @@ class CurrentGuess():
         self.new_guess = new_guess
 
 if __name__ == '__main__':
-    TARGET = 'float'
+    TARGET = 'primo'
     WORD = 'crate'
     result = _evaluate_guess(WORD, TARGET)
     for i in range(5):
